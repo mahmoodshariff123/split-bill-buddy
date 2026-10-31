@@ -1,0 +1,85 @@
+{
+  "dinner_receipt.jpg": {
+    "merchant": "Beach Shack Kitchen",
+    "date": "2026-10-18",
+    "currency": "USD",
+    "items": [
+      {
+        "name": "Fish Curry",
+        "quantity": 3,
+        "amount": 36.0
+      },
+      {
+        "name": "Beer",
+        "quantity": 4,
+        "amount": 24.0
+      },
+      {
+        "name": "Mango Lassi",
+        "quantity": 1,
+        "amount": 5.0
+      }
+    ],
+    "tax": 5.2,
+    "tip": 0,
+    "total": 70.2,
+    "confidence": 0.97
+  },
+  "taxi_receipt.jpg": {
+    "merchant": "Bangkok Airport Taxi",
+    "date": "2026-10-19",
+    "currency": "THB",
+    "items": [
+      {
+        "name": "Airport to Hotel fare",
+        "quantity": 1,
+        "amount": 450.0
+      },
+      {
+        "name": "Expressway toll",
+        "quantity": 1,
+        "amount": 75.0
+      }
+    ],
+    "tax": 0,
+    "tip": 0,
+    "total": 525.0,
+    "confidence": 0.95
+  },
+  "grocery_receipt.jpg": {
+    "merchant": "FreshMart",
+    "date": "2026-10-19",
+    "currency": "USD",
+    "items": [
+      {
+        "name": "Water 6-pack",
+        "quantity": 1,
+        "amount": 4.5
+      },
+      {
+        "name": "Potato Chips",
+        "quantity": 2,
+        "amount": 6.4
+      },
+      {
+        "name": "Sunscreen SPF50",
+        "quantity": 1,
+        "amount": 12.0
+      },
+      {
+        "name": "Beer 6-pack",
+        "quantity": 1,
+        "amount": 10.0
+      },
+      {
+        "name": "Fruit Platter",
+        "quantity": 1,
+        "amount": 6.3
+      }
+    ],
+    "tax": 0,
+    "tip": 0,
+    "total": 39.2,
+    "confidence": 0.96
+  }
+}

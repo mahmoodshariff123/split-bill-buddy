@@ -1,0 +1,51 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1200px;height:800px;font-family:"DejaVu Sans","Liberation Sans",sans-serif;overflow:hidden;
+ background:radial-gradient(circle at 15% 20%,#1f6fe0 0,#0b2a5b 45%,#071a38 100%);color:#fff;position:relative}
+.blob{position:absolute;border-radius:50%;filter:blur(2px);opacity:.18}
+.left{position:absolute;left:70px;top:110px;width:560px}
+.tag{display:inline-block;background:#ffffff22;border:1px solid #ffffff44;border-radius:999px;padding:8px 18px;font-size:20px;letter-spacing:1px}
+h1{font-size:92px;line-height:1.0;margin:26px 0 18px;font-weight:800;letter-spacing:-2px}
+h1 span{color:#ffc439}
+p{font-size:30px;line-height:1.35;color:#d6e4ff}
+.chips{margin-top:40px;display:flex;flex-direction:column;gap:16px}
+.chip{display:flex;align-items:center;gap:16px;font-size:25px}
+.dot{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;color:#0b2a5b}
+.phone{position:absolute;right:80px;top:70px;width:430px;height:640px;background:#fff;border-radius:42px;box-shadow:0 30px 80px #0009;padding:28px 26px;color:#1c2433;transform:rotate(3deg)}
+.rc{background:#f6f7fb;border-radius:18px;padding:18px 20px;font-family:"DejaVu Sans Mono",monospace;font-size:17px}
+.rc h3{font-family:"DejaVu Sans",sans-serif;font-size:19px;margin-bottom:10px}
+.it{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px dashed #ccd}
+.av{display:inline-flex;gap:3px;margin-left:8px}
+.av i{width:22px;height:22px;border-radius:50%;display:inline-block;font-style:normal;font-size:12px;color:#fff;text-align:center;line-height:22px;font-family:"DejaVu Sans",sans-serif;font-weight:700}
+.a{background:#e8505b}.r{background:#13854e}.s{background:#8b5cf6}
+.ai{margin:16px 0;background:#eef4ff;border-left:5px solid #1f6fe0;border-radius:10px;padding:12px 14px;font-size:17px;color:#0b2a5b}
+.owe{display:flex;justify-content:space-between;align-items:center;padding:12px 0;font-size:19px}
+.pay{background:#ffc439;color:#0b2a5b;font-weight:800;border-radius:999px;padding:9px 18px;font-size:17px}
+.done{background:#dff3e8;color:#13854e;font-weight:800;border-radius:999px;padding:9px 18px;font-size:17px}
+</style></head><body>
+<div class="blob" style="width:420px;height:420px;background:#ffc439;left:-120px;bottom:-160px"></div>
+<div class="blob" style="width:300px;height:300px;background:#5fb3ff;left:520px;top:-120px"></div>
+<div class="left">
+  <div class="tag">AI + PAYPAL</div>
+  <h1>Split Bill<br><span>Buddy</span></h1>
+  <p>Snap receipts. AI splits them fairly.<br>Everyone settles up in one tap.</p>
+  <div class="chips">
+    <div class="chip"><div class="dot" style="background:#5fb3ff">1</div>Reads receipts item by item</div>
+    <div class="chip"><div class="dot" style="background:#8be0b0">2</div>"Sara didn't drink" - understood</div>
+    <div class="chip"><div class="dot" style="background:#ffc439">3</div>Pay back instantly with PayPal</div>
+  </div>
+</div>
+<div class="phone">
+  <div class="rc">
+    <h3>Beach Shack Dinner</h3>
+    <div class="it"><span>Fish curry x3</span><span>$36<span class="av"><i class="a">A</i><i class="r">R</i><i class="s">S</i></span></span></div>
+    <div class="it"><span>Beer x4</span><span>$24<span class="av"><i class="a">A</i><i class="r">R</i></span></span></div>
+    <div class="it"><span>Mango lassi</span><span>$5<span class="av"><i class="s">S</i></span></span></div>
+    <div class="it" style="border:0;font-weight:700"><span>Total</span><span>$65.00</span></div>
+  </div>
+  <div class="ai"><b>AI:</b> Sara didn't drink, so beer is split between Ali and Ravi.</div>
+  <div class="owe"><span><b>Ravi</b> owes <b>Ali</b> $24.00</span><span class="pay">Pay now</span></div>
+  <div class="owe"><span><b>Sara</b> owes <b>Ali</b> $17.00</span><span class="done">Paid</span></div>
+  <div class="owe"><span><b>Ali</b> is all settled</span><span style="color:#13854e;font-weight:800">OK</span></div><div style="margin-top:14px;background:#0b2a5b;color:#fff;border-radius:16px;padding:16px 18px;font-size:17px;line-height:1.5"><b style="font-size:20px">Goa Trip</b><br>3 friends · 5 receipts · 2 payments to settle</div>
+</div>
+</body></html>
