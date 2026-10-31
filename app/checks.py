@@ -1,13 +1,38 @@
 """Safety checks on what the AI returned, before any money math. Problems become warnings the user sees."""
+from pathlib import Path
+
+from PIL import Image, ImageFilter, ImageStat
+
 from .split import cents
 
 LOW_CONFIDENCE = 0.70
+UNREADABLE = 0.50
+MIN_SHARPNESS = 22.0
+CLEARER = "Please upload a clearer photo (good light, whole receipt, no blur)."
+
+
+def photo_sharpness(path: Path) -> float:
+    """Edge strength of the photo; blurry photos score low. Plain image maths, no AI."""
+    with Image.open(path) as im:
+        g = im.convert("L")
+        g.thumbnail((800, 800))
+        return ImageStat.Stat(g.filter(ImageFilter.FIND_EDGES)).stddev[0]
+
+
+def check_photo(path: Path) -> list[str]:
+    try:
+        sharp = photo_sharpness(path)
+    except OSError:
+        raise ValueError("This file is not a readable photo. " + CLEARER)
+    return [f"The photo looks blurry. {CLEARER} Or check the items below."] if sharp < MIN_SHARPNESS else []
 
 
 def check_receipt(receipt: dict) -> list[str]:
     warnings = []
     if not receipt.get("items"):
-        raise ValueError("No items could be read from this receipt. Try a clearer photo.")
+        raise ValueError("No items could be read from this receipt. " + CLEARER)
+    if receipt.get("confidence", 1) < UNREADABLE:
+        raise ValueError(f"The AI could not read this receipt reliably (confidence {receipt['confidence']:.2f}). " + CLEARER)
     if receipt.get("confidence", 1) < LOW_CONFIDENCE:
         warnings.append(f"The photo was hard to read (confidence {receipt['confidence']:.2f}). Please double-check the items.")
     expected = sum(cents(i["amount"]) for i in receipt["items"]) + cents(receipt.get("tax") or 0) + cents(receipt.get("tip") or 0)

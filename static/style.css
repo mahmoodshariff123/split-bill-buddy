@@ -55,3 +55,9 @@ td.r { text-align:right; white-space:nowrap; } td.who { white-space:nowrap; }
 code { font-size:12px; background:#eef1f6; padding:2px 6px; border-radius:5px; }
 .spinner { display:inline-block; width:14px; height:14px; border:2px solid #fff8; border-top-color:#fff; border-radius:50%; animation:spin .8s linear infinite; vertical-align:middle; margin-right:6px; }
 @keyframes spin { to { transform:rotate(360deg); } }
+.review { background:#f7f9fc; border-radius:8px; padding:6px 10px; font-size:13px; margin-top:8px; display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+.checked { background:#e6f5ec; color:var(--green); border-radius:8px; padding:6px 10px; font-size:13px; margin-top:8px; font-weight:600; }
+.fix { background:#f7f9fc; border:1px solid var(--line); border-radius:10px; padding:12px; margin-top:8px; }
+.fixrow { display:grid; grid-template-columns:1fr 110px; gap:8px; margin-bottom:6px; }
+.fixrow3 { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.fixrow3 label { margin:4px 0 0; }

@@ -42,6 +42,8 @@ After a trip with friends, someone always ends up typing receipts into a spreads
 - **The AI never does money math.** It only reads and assigns; [`app/split.py`](app/split.py) does all arithmetic in integer cents.
 - **The AI's output is checked** ([`app/checks.py`](app/checks.py)):
   - If items + tax + tip don't match the total, or the photo was hard to read, a warning is shown.
+  - **Blurry photos:** a plain image-sharpness check (Pillow, no AI) warns "please upload a clearer photo". If the AI's confidence is below 0.5, the receipt is rejected instead of guessed.
+  - **Manual cross-check:** every receipt has **Check & fix**. You compare it with the photo, correct any item, tax or total, and the code recalculates the shares. It then shows "✓ Checked by you".
   - Unknown names, or items with nobody assigned, fall back to "shared by everyone" with a warning.
 - **Receipt text is treated as data**, never as instructions.
 - **A debt can only be paid if it really exists**, so the server re-checks the amount before creating a PayPal order.

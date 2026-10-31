@@ -148,6 +148,17 @@ async function showTrip(id, data) {
             </table>
             <div class="small" style="margin-top:8px"><b>Shares:</b> ${Object.entries(e.shares).map(([n, c]) => `${esc(n)} ${money(c, g.currency)}`).join(' · ')}</div>
             ${e.warnings.map(w => `<div class="warn">⚠ ${esc(w)}</div>`).join('')}
+            ${e.checked_by_user ? '<div class="checked">✓ Checked by you against the photo</div>'
+              : `<div class="review">Compare with the photo. Anything wrong? <button class="sm secondary" data-edit="${e.id}">Check &amp; fix</button></div>`}
+            <form class="fix" id="fix-${e.id}" data-id="${e.id}" hidden>
+              ${e.items.map((it, i) => `<div class="fixrow"><input name="n${i}" value="${esc(it.name)}" required>
+                <input name="a${i}" type="number" step="0.01" min="0" value="${Number(it.amount).toFixed(2)}" required></div>`).join('')}
+              <div class="fixrow3"><label>Tax<input name="tax" type="number" step="0.01" min="0" value="${Number(e.receipt.tax || 0).toFixed(2)}"></label>
+                <label>Tip<input name="tip" type="number" step="0.01" min="0" value="${Number(e.receipt.tip || 0).toFixed(2)}"></label>
+                <label>Total<input name="total" type="number" step="0.01" min="0.01" value="${Number(e.receipt.total).toFixed(2)}" required></label></div>
+              <div class="row"><button class="sm green">Save &amp; recalculate</button><button type="button" class="sm secondary" data-edit="${e.id}">Cancel</button></div>
+              <div class="ferr"></div>
+            </form>
             <div class="small muted" style="margin-top:6px">Read by ${esc(e.receipt.source)} · split by ${esc(e.ai_source)}
               · <button class="link" data-del="${e.id}">remove</button></div>
           </div>
@@ -184,6 +195,16 @@ async function showTrip(id, data) {
       btn.textContent = 'Read receipt & split';
     }
   };
+  document.querySelectorAll('[data-edit]').forEach(b => b.onclick = () => { const f = $(`#fix-${b.dataset.edit}`); f.hidden = !f.hidden; });
+  document.querySelectorAll('form.fix').forEach(f => f.onsubmit = async ev => {
+    ev.preventDefault();
+    const e = g.expenses.find(x => x.id === f.dataset.id);
+    const items = e.items.map((it, i) => ({ name: f[`n${i}`].value, quantity: it.quantity, amount: Number(f[`a${i}`].value) }));
+    const body = { items, tax: Number(f.tax.value), tip: Number(f.tip.value), total: Number(f.total.value) };
+    try {
+      showTrip(g.id, await api(`/api/groups/${g.id}/expenses/${e.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }));
+    } catch (err) { f.querySelector('.ferr').innerHTML = `<div class="alert">${esc(err.message)}</div>`; }
+  });
   document.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
     if (confirm('Remove this receipt?')) showTrip(g.id, await api(`/api/groups/${g.id}/expenses/${b.dataset.del}`, { method: 'DELETE' }));
   });

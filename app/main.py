@@ -9,7 +9,7 @@ from pathlib import Path
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from . import ai, checks, config, split, store
 from .paypal import PayPalError, get_client
@@ -104,12 +104,15 @@ def add_expense(group_id: str, paid_by: str = Form(...), instruction: str = Form
     photo.write_bytes(receipt.file.read())
 
     try:
+        photo_warnings = checks.check_photo(photo)
         parsed = ai.read_receipt(photo)
-        warnings = checks.check_receipt(parsed)
+        warnings = photo_warnings + checks.check_receipt(parsed)
         plan = ai.plan_split(parsed, members, instruction)
     except ValueError as e:
+        photo.unlink(missing_ok=True)
         raise HTTPException(422, str(e))
     except Exception as e:
+        photo.unlink(missing_ok=True)
         raise HTTPException(502, f"AI could not process this receipt: {e}")
     people, reasons, plan_warnings = checks.check_plan(plan, len(parsed["items"]), members)
     original = split.split_receipt(parsed, people)
@@ -131,6 +134,42 @@ def add_expense(group_id: str, paid_by: str = Form(...), instruction: str = Form
         "shares_original": original, "shares": shares, "warnings": warnings + plan_warnings,
     }
     group["expenses"].append(expense)
+    store.save(group)
+    return _view(group)
+
+
+class ItemIn(BaseModel):
+    name: str
+    quantity: float = 1
+    amount: float = Field(ge=0)
+
+
+class ReviewIn(BaseModel):
+    items: list[ItemIn]
+    tax: float = Field(0, ge=0)
+    tip: float = Field(0, ge=0)
+    total: float = Field(gt=0)
+
+
+@app.put("/api/groups/{group_id}/expenses/{expense_id}")
+def review_expense(group_id: str, expense_id: str, body: ReviewIn):
+    """Manual cross-check: the user corrects what the AI read; shares are recalculated by code."""
+    group = _group_or_404(group_id)
+    expense = next((e for e in group["expenses"] if e["id"] == expense_id), None)
+    if not expense:
+        raise HTTPException(404, "Unknown receipt")
+    if len(body.items) != len(expense["items"]):
+        raise HTTPException(400, "Keep the same number of items")
+    receipt = {**expense["receipt"], "items": [i.model_dump() for i in body.items],
+               "tax": body.tax, "tip": body.tip, "total": body.total, "confidence": 1.0}
+    warnings = checks.check_receipt(receipt)
+    people = [it["people"] for it in expense["items"]]
+    original = split.split_receipt(receipt, people)
+    expense.update(
+        receipt=receipt, shares_original=original, shares=split.convert_shares(original, expense["fx_rate"]),
+        items=[{**i, "people": old["people"], "reason": old["reason"]} for i, old in zip(receipt["items"], expense["items"])],
+        warnings=warnings, checked_by_user=True,
+    )
     store.save(group)
     return _view(group)
 
