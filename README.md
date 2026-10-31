@@ -34,7 +34,7 @@ After a trip with friends, someone always ends up typing receipts into a spreads
 
 | Tool / model | What it does |
 |---|---|
-| **Google Gemini** (`gemini-2.5-flash`, via the `google-genai` SDK) | 1) Reads receipt photos into structured JSON (items, tax, tip, total, currency, confidence). 2) Turns the plain-English instruction into a per-item "who shares this" plan, with a reason for each item. See [`app/ai.py`](app/ai.py). |
+| **Google Gemini** (`gemini-3.5-flash`, via the `google-genai` SDK) | 1) Reads receipt photos into structured JSON (items, tax, tip, total, currency, confidence). 2) Turns the plain-English instruction into a per-item "who shares this" plan, with a reason for each item. See [`app/ai.py`](app/ai.py). |
 | **Devin (Cognition AI)** | AI coding assistant used to help write and test the code. |
 
 ### Safety by design
